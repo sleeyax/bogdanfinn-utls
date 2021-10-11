@@ -1,4 +1,4 @@
-module github.com/Titanium-ctrl/utls
+module github.com/Carcraftz/utls
 
 require (
 	github.com/dsnet/compress v0.0.1

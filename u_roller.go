@@ -34,6 +34,7 @@ func NewRoller() (*Roller, error) {
 			HelloChrome_Auto,
 			HelloFirefox_Auto,
 			HelloIOS_Auto,
+			HelloSafari_Auto,
 			HelloRandomized,
 		},
 		TcpDialTimeout:      time.Second * time.Duration(tcpDialTimeoutInc),

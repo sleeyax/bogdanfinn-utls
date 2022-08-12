@@ -120,11 +120,12 @@ const (
 	helloRandomizedNoALPN = "Randomized-NoALPN"
 	helloCustom           = "Custom"
 	helloFirefox          = "Firefox"
+	helloOpera            = "Opera"
 	helloChrome           = "Chrome"
 	helloIOS              = "iOS"
+	helloSafari           = "Safari"
 	helloAndroid          = "Android"
 	helloEdge             = "Edge"
-	helloSafari           = "Safari"
 	hello360              = "360Browser"
 	helloQQ               = "QQBrowser"
 
@@ -173,7 +174,10 @@ var (
 	HelloFirefox_102  = ClientHelloID{helloFirefox, "102", nil}
 	HelloFirefox_105  = ClientHelloID{helloFirefox, "105", nil}
 
-	HelloChrome_Auto = HelloChrome_102
+	HelloOpera_Auto = HelloOpera_89
+	HelloOpera_89   = ClientHelloID{helloOpera, "89", nil}
+
+	HelloChrome_Auto = HelloChrome_104
 	HelloChrome_58   = ClientHelloID{helloChrome, "58", nil}
 	HelloChrome_62   = ClientHelloID{helloChrome, "62", nil}
 	HelloChrome_70   = ClientHelloID{helloChrome, "70", nil}
@@ -183,21 +187,26 @@ var (
 	HelloChrome_96   = ClientHelloID{helloChrome, "96", nil}
 	HelloChrome_100  = ClientHelloID{helloChrome, "100", nil}
 	HelloChrome_102  = ClientHelloID{helloChrome, "102", nil}
+	HelloChrome_103  = ClientHelloID{helloChrome, "103", nil}
+	HelloChrome_104  = ClientHelloID{helloChrome, "104", nil}
 
-	HelloIOS_Auto = HelloIOS_14
+	HelloIOS_Auto = HelloIOS_15_5
 	HelloIOS_11_1 = ClientHelloID{helloIOS, "111", nil} // legacy "111" means 11.1
 	HelloIOS_12_1 = ClientHelloID{helloIOS, "12.1", nil}
 	HelloIOS_13   = ClientHelloID{helloIOS, "13", nil}
 	HelloIOS_14   = ClientHelloID{helloIOS, "14", nil}
+
+	HelloIOS_15_5 = ClientHelloID{helloIOS, "15.5", nil}
+
+	HelloSafari_Auto = HelloSafari_15_5
+	HelloSafari_15_3 = ClientHelloID{helloSafari, "15.3", nil}
+	HelloSafari_15_5 = ClientHelloID{helloSafari, "15.5", nil}
 
 	HelloAndroid_11_OkHttp = ClientHelloID{helloAndroid, "11", nil}
 
 	HelloEdge_Auto = HelloEdge_85 // HelloEdge_106 seems to be incompatible with this library
 	HelloEdge_85   = ClientHelloID{helloEdge, "85", nil}
 	HelloEdge_106  = ClientHelloID{helloEdge, "106", nil}
-
-	HelloSafari_Auto = HelloSafari_16_0
-	HelloSafari_16_0 = ClientHelloID{helloSafari, "16.0", nil}
 
 	Hello360_Auto = Hello360_7_5 // Hello360_11_0 seems to be incompatible with this library
 	Hello360_7_5  = ClientHelloID{hello360, "7.5", nil}

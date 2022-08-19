@@ -77,7 +77,7 @@ func (c *Conn) makeClientHello() (*clientHelloMsg, clientKeySharePrivate, error)
 
 	hello := &clientHelloMsg{
 		vers:                         clientHelloVersion,
-		compressionMethods:           []uint8{compressionNone},
+		compressionMethods:           []uint8{CompressionNone},
 		random:                       make([]byte, 32),
 		extendedMasterSecret:         true,
 		ocspStapling:                 true,
@@ -812,7 +812,7 @@ func (hs *clientHandshakeState) processServerHello() (bool, error) {
 		return false, err
 	}
 
-	if hs.serverHello.compressionMethod != compressionNone {
+	if hs.serverHello.compressionMethod != CompressionNone {
 		c.sendAlert(alertUnexpectedMessage)
 		return false, errors.New("tls: server selected unsupported compression format")
 	}

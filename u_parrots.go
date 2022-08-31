@@ -181,7 +181,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP384,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&SessionTicketExtension{},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
@@ -254,7 +254,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP384,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&SessionTicketExtension{},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
@@ -326,7 +326,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP384,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&SessionTicketExtension{},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
@@ -398,7 +398,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP384,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&SessionTicketExtension{},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
@@ -457,7 +457,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 				TLS_RSA_WITH_AES_256_CBC_SHA,
 			},
 			CompressionMethods: []uint8{
-				0x00,
+				CompressionNone,
 			},
 			Extensions: []TLSExtension{
 				&UtlsGREASEExtension{},
@@ -471,7 +471,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP384,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&SessionTicketExtension{},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
@@ -507,7 +507,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 				&UtlsPaddingExtension{GetPaddingLen: BoringPaddingStyle},
 			},
 		}, nil
-	case HelloChrome_103.Str(), HelloChrome_104.Str():
+	case HelloChrome_103.Str(), HelloChrome_104.Str(), HelloChrome_105.Str():
 		return ClientHelloSpec{
 			CipherSuites: []uint16{
 				GREASE_PLACEHOLDER,
@@ -528,7 +528,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 				TLS_RSA_WITH_AES_256_CBC_SHA,
 			},
 			CompressionMethods: []uint8{
-				0x00,
+				CompressionNone,
 			},
 			Extensions: []TLSExtension{
 				&UtlsGREASEExtension{},
@@ -542,7 +542,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP384,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&SessionTicketExtension{},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
@@ -1343,7 +1343,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 				TLS_RSA_WITH_3DES_EDE_CBC_SHA,
 			},
 			CompressionMethods: []byte{
-				0x00, // CompressionNone
+				CompressionNone,
 			},
 			Extensions: []TLSExtension{
 				&RenegotiationInfoExtension{Renegotiation: RenegotiateOnceAsClient},
@@ -1366,7 +1366,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 				&SCTExtension{},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&KeyShareExtension{[]KeyShare{
 					{Group: X25519},
@@ -1438,7 +1438,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP521,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
 				&StatusRequestExtension{},
@@ -1504,7 +1504,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP384,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&StatusRequestExtension{},
 				&SignatureAlgorithmsExtension{SupportedSignatureAlgorithms: []SignatureScheme{
@@ -1649,7 +1649,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP521,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
 				&StatusRequestExtension{},
@@ -1726,7 +1726,7 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 					CurveP521,
 				}},
 				&SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
+					pointFormatUncompressed,
 				}},
 				&ALPNExtension{AlpnProtocols: []string{"h2", "http/1.1"}},
 				&StatusRequestExtension{},

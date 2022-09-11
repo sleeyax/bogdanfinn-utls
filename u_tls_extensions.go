@@ -543,8 +543,8 @@ func (e *SignatureAlgorithmsCertExtension) Read(b []byte) (int, error) {
 		return 0, io.ErrShortBuffer
 	}
 	// https://tools.ietf.org/html/rfc5246#section-7.4.1.4.1
-	b[0] = byte(extensionSignatureAlgorithmsCert >> 8)
-	b[1] = byte(extensionSignatureAlgorithmsCert)
+	b[0] = byte(ExtensionSignatureAlgorithmsCert >> 8)
+	b[1] = byte(ExtensionSignatureAlgorithmsCert)
 	b[2] = byte((2 + 2*len(e.SupportedSignatureAlgorithms)) >> 8)
 	b[3] = byte(2 + 2*len(e.SupportedSignatureAlgorithms))
 	b[4] = byte((2 * len(e.SupportedSignatureAlgorithms)) >> 8)
@@ -715,8 +715,8 @@ func (e *ApplicationSettingsExtension) Read(b []byte) (int, error) {
 	}
 
 	// Read Type.
-	b[0] = byte(utlsExtensionApplicationSettings >> 8)   // hex: 44 dec: 68
-	b[1] = byte(utlsExtensionApplicationSettings & 0xff) // hex: 69 dec: 105
+	b[0] = byte(ExtensionALPS >> 8)   // hex: 44 dec: 68
+	b[1] = byte(ExtensionALPS & 0xff) // hex: 69 dec: 105
 
 	lengths := b[2:] // get the remaining buffer without Type
 	b = b[6:]        // set the buffer to the buffer without Type, Length and ALPS Extension Length (so only the Supported ALPN list remains)

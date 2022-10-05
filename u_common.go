@@ -579,7 +579,7 @@ var (
 	HelloOpera_90   = ClientHelloID{helloOpera, "90", nil, EmptyClientHelloSpecFactory}
 	HelloOpera_89   = ClientHelloID{helloOpera, "89", nil, EmptyClientHelloSpecFactory}
 
-	HelloChrome_Auto = HelloChrome_105
+	HelloChrome_Auto = HelloChrome_106
 	HelloChrome_58   = ClientHelloID{helloChrome, "58", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_62   = ClientHelloID{helloChrome, "62", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_70   = ClientHelloID{helloChrome, "70", nil, EmptyClientHelloSpecFactory}
@@ -592,6 +592,7 @@ var (
 	HelloChrome_103  = ClientHelloID{helloChrome, "103", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_104  = ClientHelloID{helloChrome, "104", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_105  = ClientHelloID{helloChrome, "105", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_106  = ClientHelloID{helloChrome, "106", nil, EmptyClientHelloSpecFactory}
 
 	// Chrome with PSK: Chrome start sending this ClientHello after doing TLS 1.3 handshake with the same server.
 	HelloChrome_100_PSK      = ClientHelloID{helloChrome, "100_PSK", nil, nil} // beta: PSK extension added. uTLS doesn't fully support PSK. Use at your own risk.

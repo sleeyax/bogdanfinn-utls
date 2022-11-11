@@ -893,8 +893,11 @@ func (m *serverHelloMsg) unmarshal(data []byte) bool {
 }
 
 type encryptedExtensionsMsg struct {
-	raw          []byte
-	alpnProtocol string
+	raw                    []byte
+	alpnProtocol           string
+	hasApplicationSettings bool
+	applicationSettings    []byte
+	customExtension        []byte
 }
 
 func (m *encryptedExtensionsMsg) marshal() []byte {
@@ -953,6 +956,10 @@ func (m *encryptedExtensionsMsg) unmarshal(data []byte) bool {
 				return false
 			}
 			m.alpnProtocol = string(proto)
+		case ExtensionALPS:
+			m.hasApplicationSettings = true
+			m.applicationSettings = []byte(extData)
+			continue
 		default:
 			// Ignore unknown extensions.
 			continue

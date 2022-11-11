@@ -359,7 +359,7 @@ func (f *Fingerprinter) FingerprintClientHello(data []byte) (*ClientHelloSpec, e
 			}
 			clientHelloSpec.Extensions = append(clientHelloSpec.Extensions, recordSizeExt)
 
-		case fakeExtensionDelegatedCredentials:
+		case ExtensionDelegatedCredentials:
 			//https://datatracker.ietf.org/doc/html/draft-ietf-tls-subcerts-15#section-4.1.1
 			var supportedAlgs cryptobyte.String
 			if !extData.ReadUint16LengthPrefixed(&supportedAlgs) || supportedAlgs.Empty() {
@@ -374,7 +374,7 @@ func (f *Fingerprinter) FingerprintClientHello(data []byte) (*ClientHelloSpec, e
 				supportedSignatureAlgorithms = append(
 					supportedSignatureAlgorithms, SignatureScheme(sigAndAlg))
 			}
-			clientHelloSpec.Extensions = append(clientHelloSpec.Extensions, &FakeDelegatedCredentialsExtension{supportedSignatureAlgorithms})
+			clientHelloSpec.Extensions = append(clientHelloSpec.Extensions, &DelegatedCredentialsExtension{supportedSignatureAlgorithms})
 
 		case ExtensionPreSharedKey:
 			// RFC 8446, Section 4.2.11

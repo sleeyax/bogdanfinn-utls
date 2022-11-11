@@ -92,6 +92,10 @@ type Conn struct {
 	// clientProtocol is the negotiated ALPN protocol.
 	clientProtocol string
 
+	hasApplicationSettings   bool
+	peerApplicationSettings  []byte
+	localApplicationSettings []byte
+
 	// input/output
 	in, out   halfConn
 	rawInput  bytes.Buffer // raw input, starting with a record header
@@ -1076,7 +1080,11 @@ func (c *Conn) readHandshake() (any, error) {
 	case typeFinished:
 		m = new(finishedMsg)
 	case typeEncryptedExtensions:
-		m = new(encryptedExtensionsMsg)
+		if c.isClient {
+			m = new(encryptedExtensionsMsg)
+		} else {
+			m = new(clientEncryptedExtensionsMsg)
+		}
 	case typeEndOfEarlyData:
 		m = new(endOfEarlyDataMsg)
 	case typeKeyUpdate:

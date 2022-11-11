@@ -242,6 +242,8 @@ type ConnectionState struct {
 	// Deprecated: this value is always true.
 	NegotiatedProtocolIsMutual bool
 
+	PeerApplicationSettings []byte // application settings provided by peer
+
 	// ServerName is the value of the Server Name Indication extension sent by
 	// the client. It's available both on the server and on the client side.
 	ServerName string
@@ -628,6 +630,10 @@ type Config struct {
 	// or the peer doesn't support ALPN, the connection will succeed and
 	// ConnectionState.NegotiatedProtocol will be empty.
 	NextProtos []string
+
+	// ApplicationSettings is a set of application settings to use which each
+	// application protocol.
+	ApplicationSettings map[string][]byte
 
 	// ServerName is used to verify the hostname on the returned
 	// certificates unless InsecureSkipVerify is given. It is also included

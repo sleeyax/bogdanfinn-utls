@@ -7,6 +7,8 @@ package tls
 import (
 	"errors"
 	"io"
+
+	"golang.org/x/crypto/cryptobyte"
 )
 
 type TLSExtension interface {
@@ -1008,34 +1010,67 @@ func (e *FakeTokenBindingExtension) Read(b []byte) (int, error) {
 	return e.Len(), io.EOF
 }
 
-// https://datatracker.ietf.org/doc/html/draft-ietf-tls-subcerts-15#section-4.1.1
-
-type FakeDelegatedCredentialsExtension struct {
-	SupportedSignatureAlgorithms []SignatureScheme
+type clientEncryptedExtensionsMsg struct {
+	raw                    []byte
+	applicationSettings    []byte
+	hasApplicationSettings bool
+	customExtension        []byte
 }
 
-func (e *FakeDelegatedCredentialsExtension) writeToUConn(uc *UConn) error {
-	return nil
-}
-
-func (e *FakeDelegatedCredentialsExtension) Len() int {
-	return 6 + 2*len(e.SupportedSignatureAlgorithms)
-}
-
-func (e *FakeDelegatedCredentialsExtension) Read(b []byte) (int, error) {
-	if len(b) < e.Len() {
-		return 0, io.ErrShortBuffer
+func (m *clientEncryptedExtensionsMsg) marshal() (x []byte) {
+	if m.raw != nil {
+		return m.raw
 	}
-	// https://datatracker.ietf.org/doc/html/draft-ietf-tls-subcerts-15#section-4.1.1
-	b[0] = byte(fakeExtensionDelegatedCredentials >> 8)
-	b[1] = byte(fakeExtensionDelegatedCredentials)
-	b[2] = byte((2 + 2*len(e.SupportedSignatureAlgorithms)) >> 8)
-	b[3] = byte((2 + 2*len(e.SupportedSignatureAlgorithms)))
-	b[4] = byte((2 * len(e.SupportedSignatureAlgorithms)) >> 8)
-	b[5] = byte((2 * len(e.SupportedSignatureAlgorithms)))
-	for i, sigAndHash := range e.SupportedSignatureAlgorithms {
-		b[6+2*i] = byte(sigAndHash >> 8)
-		b[7+2*i] = byte(sigAndHash)
+
+	var builder cryptobyte.Builder
+	builder.AddUint8(typeEncryptedExtensions)
+	builder.AddUint24LengthPrefixed(func(body *cryptobyte.Builder) {
+		body.AddUint16LengthPrefixed(func(extensions *cryptobyte.Builder) {
+			if m.hasApplicationSettings {
+				extensions.AddUint16(ExtensionALPS)
+				extensions.AddUint16LengthPrefixed(func(msg *cryptobyte.Builder) {
+					msg.AddBytes(m.applicationSettings)
+				})
+			}
+			if len(m.customExtension) > 0 {
+				extensions.AddUint16(extensionCustom)
+				extensions.AddUint16LengthPrefixed(func(msg *cryptobyte.Builder) {
+					msg.AddBytes(m.customExtension)
+				})
+			}
+		})
+	})
+
+	m.raw = builder.BytesOrPanic()
+	return m.raw
+}
+
+func (m *clientEncryptedExtensionsMsg) unmarshal(data []byte) bool {
+	*m = clientEncryptedExtensionsMsg{raw: data}
+	s := cryptobyte.String(data)
+
+	var extensions cryptobyte.String
+	if !s.Skip(4) || // message type and uint24 length field
+		!s.ReadUint16LengthPrefixed(&extensions) || !s.Empty() {
+		return false
 	}
-	return e.Len(), io.EOF
+
+	for !extensions.Empty() {
+		var extension uint16
+		var extData cryptobyte.String
+		if !extensions.ReadUint16(&extension) ||
+			!extensions.ReadUint16LengthPrefixed(&extData) {
+			return false
+		}
+
+		switch extension {
+		case ExtensionALPS:
+			m.hasApplicationSettings = true
+			m.applicationSettings = []byte(extData)
+		default:
+			// Unknown extensions are illegal in EncryptedExtensions.
+			return false
+		}
+	}
+	return true
 }

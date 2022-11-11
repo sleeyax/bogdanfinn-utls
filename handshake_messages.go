@@ -741,7 +741,7 @@ func (m *serverHelloMsg) marshal() []byte {
 				})
 			}
 			if len(m.supportedPoints) > 0 {
-				b.AddUint16(extensionSupportedPoints)
+				b.AddUint16(ExtensionSupportedPoints)
 				b.AddUint16LengthPrefixed(func(b *cryptobyte.Builder) {
 					b.AddUint8LengthPrefixed(func(b *cryptobyte.Builder) {
 						b.AddBytes(m.supportedPoints)

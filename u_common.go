@@ -229,15 +229,15 @@ var (
 	HelloAndroid_11_OkHttp = ClientHelloID{helloAndroid, "11", nil, EmptyClientHelloSpecFactory}
 
 	HelloEdge_Auto = HelloEdge_85 // HelloEdge_106 seems to be incompatible with this library
-	HelloEdge_85   = ClientHelloID{helloEdge, "85", nil}
-	HelloEdge_106  = ClientHelloID{helloEdge, "106", nil}
+	HelloEdge_85   = ClientHelloID{helloEdge, "85", nil, EmptyClientHelloSpecFactory}
+	HelloEdge_106  = ClientHelloID{helloEdge, "106", nil, EmptyClientHelloSpecFactory}
 
 	Hello360_Auto = Hello360_7_5 // Hello360_11_0 seems to be incompatible with this library
-	Hello360_7_5  = ClientHelloID{hello360, "7.5", nil}
-	Hello360_11_0 = ClientHelloID{hello360, "11.0", nil}
+	Hello360_7_5  = ClientHelloID{hello360, "7.5", nil, EmptyClientHelloSpecFactory}
+	Hello360_11_0 = ClientHelloID{hello360, "11.0", nil, EmptyClientHelloSpecFactory}
 
 	HelloQQ_Auto = HelloQQ_11_1
-	HelloQQ_11_1 = ClientHelloID{helloQQ, "11.1", nil}
+	HelloQQ_11_1 = ClientHelloID{helloQQ, "11.1", nil, EmptyClientHelloSpecFactory}
 )
 
 // based on spec's GreaseStyle, GREASE_PLACEHOLDER may be replaced by another GREASE value

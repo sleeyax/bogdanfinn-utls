@@ -173,28 +173,28 @@ func (hs *serverHandshakeState) processClientHello() error {
 
 	hs.hello = new(serverHelloMsg)
 	hs.hello.vers = c.vers
-/*
-	supportedCurve := false
-	preferredCurves := c.config.curvePreferences()
-Curves:
-	for _, curve := range hs.clientHello.supportedCurves {
-		for _, supported := range preferredCurves {
-			if supported == curve {
-				supportedCurve = true
-				break Curves
-			}
-		}
-	}
+	/*
+	   	supportedCurve := false
+	   	preferredCurves := c.config.curvePreferences()
+	   Curves:
+	   	for _, curve := range hs.clientHello.supportedCurves {
+	   		for _, supported := range preferredCurves {
+	   			if supported == curve {
+	   				supportedCurve = true
+	   				break Curves
+	   			}
+	   		}
+	   	}
 
-	supportedPointFormat := false
-	for _, pointFormat := range hs.clientHello.supportedPoints {
-		if pointFormat == PointFormatUncompressed {
-			supportedPointFormat = true
-			break
-		}
-	}
-	hs.ellipticOk = supportedCurve && supportedPointFormat
-*/
+	   	supportedPointFormat := false
+	   	for _, pointFormat := range hs.clientHello.supportedPoints {
+	   		if pointFormat == PointFormatUncompressed {
+	   			supportedPointFormat = true
+	   			break
+	   		}
+	   	}
+	   	hs.ellipticOk = supportedCurve && supportedPointFormat
+	*/
 	foundCompression := false
 	// We only support null compression, so check that the client offered it.
 	for _, compression := range hs.clientHello.compressionMethods {
@@ -267,7 +267,7 @@ Curves:
 		//
 		// Per RFC 4492, section 5.1.2, implementations MUST support the
 		// uncompressed point format. See golang.org/issue/31943.
-		hs.hello.supportedPoints = []uint8{pointFormatUncompressed}
+		hs.hello.supportedPoints = []uint8{PointFormatUncompressed}
 	}
 
 	if priv, ok := hs.cert.PrivateKey.(crypto.Signer); ok {
@@ -337,7 +337,7 @@ func supportsECDHE(c *Config, supportedCurves []CurveID, supportedPoints []uint8
 
 	supportsPointFormat := false
 	for _, pointFormat := range supportedPoints {
-		if pointFormat == pointFormatUncompressed {
+		if pointFormat == PointFormatUncompressed {
 			supportsPointFormat = true
 			break
 		}

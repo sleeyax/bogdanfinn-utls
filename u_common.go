@@ -161,7 +161,6 @@ const (
 	helloSafari           = "Safari"
 	helloAndroid          = "Android"
 	helloEdge             = "Edge"
-	helloSafari           = "Safari"
 	hello360              = "360Browser"
 	helloQQ               = "QQBrowser"
 
@@ -580,21 +579,22 @@ var (
 	HelloOpera_90   = ClientHelloID{helloOpera, "90", nil, EmptyClientHelloSpecFactory}
 	HelloOpera_89   = ClientHelloID{helloOpera, "89", nil, EmptyClientHelloSpecFactory}
 
-	HelloChrome_Auto = HelloChrome_107
-	HelloChrome_58   = ClientHelloID{helloChrome, "58", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_62   = ClientHelloID{helloChrome, "62", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_70   = ClientHelloID{helloChrome, "70", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_72   = ClientHelloID{helloChrome, "72", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_83   = ClientHelloID{helloChrome, "83", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_87   = ClientHelloID{helloChrome, "87", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_96   = ClientHelloID{helloChrome, "96", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_100  = ClientHelloID{helloChrome, "100", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_102  = ClientHelloID{helloChrome, "102", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_103  = ClientHelloID{helloChrome, "103", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_104  = ClientHelloID{helloChrome, "104", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_105  = ClientHelloID{helloChrome, "105", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_106  = ClientHelloID{helloChrome, "106", nil, EmptyClientHelloSpecFactory}
-	HelloChrome_107  = ClientHelloID{helloChrome, "107", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_Auto        = HelloChrome_107
+	HelloChrome_58          = ClientHelloID{helloChrome, "58", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_62          = ClientHelloID{helloChrome, "62", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_70          = ClientHelloID{helloChrome, "70", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_72          = ClientHelloID{helloChrome, "72", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_83          = ClientHelloID{helloChrome, "83", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_87          = ClientHelloID{helloChrome, "87", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_96          = ClientHelloID{helloChrome, "96", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_100         = ClientHelloID{helloChrome, "100", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_102         = ClientHelloID{helloChrome, "102", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_103         = ClientHelloID{helloChrome, "103", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_104         = ClientHelloID{helloChrome, "104", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_105         = ClientHelloID{helloChrome, "105", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_106         = ClientHelloID{helloChrome, "106", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_106_Shuffle = ClientHelloID{helloChrome, "106", nil, EmptyClientHelloSpecFactory} // beta: shuffler enabled starting from 106
+	HelloChrome_107         = ClientHelloID{helloChrome, "107", nil, EmptyClientHelloSpecFactory}
 
 	// Chrome with PSK: Chrome start sending this ClientHello after doing TLS 1.3 handshake with the same server.
 	HelloChrome_100_PSK      = ClientHelloID{helloChrome, "100_PSK", nil, nil} // beta: PSK extension added. uTLS doesn't fully support PSK. Use at your own risk.
@@ -619,6 +619,8 @@ var (
 	HelloAndroid_11_OkHttp = ClientHelloID{helloAndroid, "11", nil, EmptyClientHelloSpecFactory}
 
 	HelloEdge_Auto = HelloEdge_85 // HelloEdge_106 seems to be incompatible with this library
+	HelloEdge_85   = ClientHelloID{helloEdge, "85", nil, EmptyClientHelloSpecFactory}
+	HelloEdge_106  = ClientHelloID{helloEdge, "106", nil, EmptyClientHelloSpecFactory}
 	HelloEdge_85   = ClientHelloID{helloEdge, "85", nil, nil}
 	HelloEdge_106  = ClientHelloID{helloEdge, "106", nil, nil}
 
@@ -626,10 +628,13 @@ var (
 	HelloSafari_16_0 = ClientHelloID{helloSafari, "16.0", nil, nil}
 
 	Hello360_Auto = Hello360_7_5 // Hello360_11_0 seems to be incompatible with this library
+	Hello360_7_5  = ClientHelloID{hello360, "7.5", nil, EmptyClientHelloSpecFactory}
+	Hello360_11_0 = ClientHelloID{hello360, "11.0", nil, EmptyClientHelloSpecFactory}
 	Hello360_7_5  = ClientHelloID{hello360, "7.5", nil, nil}
 	Hello360_11_0 = ClientHelloID{hello360, "11.0", nil, nil}
 
 	HelloQQ_Auto = HelloQQ_11_1
+	HelloQQ_11_1 = ClientHelloID{helloQQ, "11.1", nil, EmptyClientHelloSpecFactory}
 	HelloQQ_11_1 = ClientHelloID{helloQQ, "11.1", nil, nil}
 )
 

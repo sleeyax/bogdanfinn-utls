@@ -736,7 +736,7 @@ func (m *serverHelloMsg) marshal() ([]byte, error) {
 		})
 	}
 	if len(m.supportedPoints) > 0 {
-		exts.AddUint16(extensionSupportedPoints)
+		exts.AddUint16(ExtensionSupportedPoints)
 		exts.AddUint16LengthPrefixed(func(exts *cryptobyte.Builder) {
 			exts.AddUint8LengthPrefixed(func(exts *cryptobyte.Builder) {
 				exts.AddBytes(m.supportedPoints)
@@ -884,7 +884,7 @@ func (m *serverHelloMsg) unmarshal(data []byte) bool {
 			if !extData.ReadUint16(&m.selectedIdentity) {
 				return false
 			}
-		case extensionSupportedPoints:
+		case ExtensionSupportedPoints:
 			// RFC 4492, Section 5.1.2
 			if !readUint8LengthPrefixed(&extData, &m.supportedPoints) ||
 				len(m.supportedPoints) == 0 {

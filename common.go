@@ -89,6 +89,7 @@ const (
 	ExtensionSupportedPoints         uint16 = 11
 	ExtensionSignatureAlgorithms     uint16 = 13
 	ExtensionALPN                    uint16 = 16
+	ExtensionStatusRequestV2         uint16 = 17
 	ExtensionSCT                     uint16 = 18
 	ExtensionPadding                 uint16 = 21
 	ExtensionExtendedMasterSecret    uint16 = 23 // https://tools.ietf.org/html/rfc7627

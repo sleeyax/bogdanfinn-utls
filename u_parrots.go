@@ -650,14 +650,6 @@ func utlsIdToSpec(id ClientHelloID) (ClientHelloSpec, error) {
 				&UtlsPaddingExtension{GetPaddingLen: BoringPaddingStyle},
 			},
 		}, nil
-	case HelloChrome_106_Shuffle.Str():
-		chs, err := utlsIdToSpec(HelloChrome_102)
-		if err != nil {
-			return chs, err
-		}
-
-		// Chrome 107 started shuffling the order of extensions
-		return shuffleExtensions(chs)
 	case HelloFirefox_55.Str(), HelloFirefox_56.Str():
 		return ClientHelloSpec{
 			TLSVersMax: VersionTLS12,
@@ -2332,12 +2324,17 @@ func (uconn *UConn) applyPresetByID(id ClientHelloID) (err error) {
 	default:
 		spec, err = utlsIdToSpec(id)
 		if err != nil {
-			providedSpec, err := id.ToSpec()
+			spec, err = id.ToSpec()
 			if err != nil {
 				return err
 			}
+		}
 
-			return uconn.ApplyPreset(&providedSpec)
+		if uconn.WithRandomTLSExtensionOrder {
+			spec, err = shuffleExtensions(spec)
+			if err != nil {
+				return err
+			}
 		}
 
 		return uconn.ApplyPreset(&spec)

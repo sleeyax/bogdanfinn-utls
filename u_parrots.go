@@ -2486,12 +2486,17 @@ func (uconn *UConn) applyPresetByID(id ClientHelloID) (err error) {
 	default:
 		spec, err = utlsIdToSpec(id)
 		if err != nil {
-			providedSpec, err := id.ToSpec()
+			spec, err = id.ToSpec()
 			if err != nil {
 				return err
 			}
+		}
 
-			return uconn.ApplyPreset(&providedSpec)
+		if uconn.WithRandomTLSExtensionOrder {
+			spec, err = shuffleExtensions(spec)
+			if err != nil {
+				return err
+			}
 		}
 
 		return uconn.ApplyPreset(&spec)

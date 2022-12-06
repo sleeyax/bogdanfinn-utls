@@ -39,6 +39,7 @@ type UConn struct {
 
 	omitSNIExtension            bool
 	WithRandomTLSExtensionOrder bool
+	WithForceHttp1              bool
 
 	// certCompressionAlgs represents the set of advertised certificate compression
 	// algorithms, as specified in the ClientHello. This is only relevant client-side, for the
@@ -48,13 +49,13 @@ type UConn struct {
 
 // UClient returns a new uTLS client, with behavior depending on clientHelloID.
 // Config CAN be nil, but make sure to eventually specify ServerName.
-func UClient(conn net.Conn, config *Config, clientHelloID ClientHelloID, withRandomTLSExtensionOrder bool) *UConn {
+func UClient(conn net.Conn, config *Config, clientHelloID ClientHelloID, withRandomTLSExtensionOrder bool, withForceHttp1 bool) *UConn {
 	if config == nil {
 		config = &Config{}
 	}
 	tlsConn := Conn{conn: conn, config: config, isClient: true}
 	handshakeState := PubClientHandshakeState{C: &tlsConn, Hello: &PubClientHelloMsg{}}
-	uconn := UConn{Conn: &tlsConn, ClientHelloID: clientHelloID, HandshakeState: handshakeState, WithRandomTLSExtensionOrder: withRandomTLSExtensionOrder}
+	uconn := UConn{Conn: &tlsConn, ClientHelloID: clientHelloID, HandshakeState: handshakeState, WithRandomTLSExtensionOrder: withRandomTLSExtensionOrder, WithForceHttp1: withForceHttp1}
 	uconn.HandshakeState.uconn = &uconn
 	uconn.handshakeFn = uconn.clientHandshake
 	uconn.sessionController = newSessionController(&uconn)

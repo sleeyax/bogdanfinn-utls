@@ -200,7 +200,7 @@ var (
 	HelloOpera_90   = ClientHelloID{helloOpera, false, "90", nil, EmptyClientHelloSpecFactory}
 	HelloOpera_89   = ClientHelloID{helloOpera, false, "89", nil, EmptyClientHelloSpecFactory}
 
-	HelloChrome_Auto = HelloChrome_108
+	HelloChrome_Auto = HelloChrome_109
 	HelloChrome_58   = ClientHelloID{helloChrome, false, "58", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_62   = ClientHelloID{helloChrome, false, "62", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_70   = ClientHelloID{helloChrome, false, "70", nil, EmptyClientHelloSpecFactory}
@@ -216,6 +216,7 @@ var (
 	HelloChrome_106  = ClientHelloID{helloChrome, false, "106", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_107  = ClientHelloID{helloChrome, false, "107", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_108  = ClientHelloID{helloChrome, false, "108", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_109  = ClientHelloID{helloChrome, false, "109", nil, EmptyClientHelloSpecFactory}
 
 	HelloIOS_Auto = HelloIOS_16_0
 	HelloIOS_11_1 = ClientHelloID{helloIOS, false, "111", nil, EmptyClientHelloSpecFactory} // legacy "111" means 11.1

@@ -41,6 +41,7 @@ const (
 	utlsFakeExtensionCustom uint16 = 1234 // not IANA assigned, for ALPS
 
 	// extensions with 'fake' prefix break connection, if server echoes them back
+	FakeExtensionEncryptThenMAC       uint16 = 22
 	fakeExtensionEncryptThenMAC       uint16 = 22
 	fakeExtensionTokenBinding         uint16 = 24
 	fakeExtensionDelegatedCredentials uint16 = 34

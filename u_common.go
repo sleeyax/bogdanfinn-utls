@@ -595,7 +595,7 @@ var (
 	HelloRandomizedNoALPN = ClientHelloID{helloRandomizedNoALPN, false, helloAutoVers, nil, EmptyClientHelloSpecFactory}
 
 	// The rest will will parrot given browser.
-	HelloFirefox_Auto = HelloFirefox_108
+	HelloFirefox_Auto = HelloFirefox_110
 	HelloFirefox_55   = ClientHelloID{helloFirefox, false, "55", nil, EmptyClientHelloSpecFactory}
 	HelloFirefox_56   = ClientHelloID{helloFirefox, false, "56", nil, EmptyClientHelloSpecFactory}
 	HelloFirefox_63   = ClientHelloID{helloFirefox, false, "63", nil, EmptyClientHelloSpecFactory}
@@ -606,6 +606,7 @@ var (
 	HelloFirefox_105  = ClientHelloID{helloFirefox, false, "105", nil, EmptyClientHelloSpecFactory}
 	HelloFirefox_106  = ClientHelloID{helloFirefox, false, "106", nil, EmptyClientHelloSpecFactory}
 	HelloFirefox_108  = ClientHelloID{helloFirefox, false, "108", nil, EmptyClientHelloSpecFactory}
+	HelloFirefox_110  = ClientHelloID{helloFirefox, false, "110", nil, EmptyClientHelloSpecFactory}
 
 	// Chrome w/ PSK: Chrome start sending this ClientHello after doing TLS 1.3 handshake with the same server.
 	// Beta: PSK extension added. However, uTLS doesn't ship with full PSK support.
@@ -623,7 +624,7 @@ var (
 	HelloOpera_90   = ClientHelloID{helloOpera, false, "90", nil, EmptyClientHelloSpecFactory}
 	HelloOpera_89   = ClientHelloID{helloOpera, false, "89", nil, EmptyClientHelloSpecFactory}
 
-	HelloChrome_Auto = HelloChrome_109
+	HelloChrome_Auto = HelloChrome_110
 	HelloChrome_58   = ClientHelloID{helloChrome, false, "58", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_62   = ClientHelloID{helloChrome, false, "62", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_70   = ClientHelloID{helloChrome, false, "70", nil, EmptyClientHelloSpecFactory}
@@ -640,6 +641,7 @@ var (
 	HelloChrome_107  = ClientHelloID{helloChrome, false, "107", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_108  = ClientHelloID{helloChrome, false, "108", nil, EmptyClientHelloSpecFactory}
 	HelloChrome_109  = ClientHelloID{helloChrome, false, "109", nil, EmptyClientHelloSpecFactory}
+	HelloChrome_110  = ClientHelloID{helloChrome, false, "110", nil, EmptyClientHelloSpecFactory}
 
 	HelloIOS_Auto = HelloIOS_16_0
 	HelloIOS_11_1 = ClientHelloID{helloIOS, false, "111", nil, EmptyClientHelloSpecFactory} // legacy "111" means 11.1

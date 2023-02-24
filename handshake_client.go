@@ -38,7 +38,7 @@ type clientHandshakeState struct {
 
 var testingOnlyForceClientHelloSignatureAlgorithms []SignatureScheme
 
-func (c *Conn) makeClientHello() (*clientHelloMsg, ecdheParameters, error) {
+func (c *Conn) makeClientHello() (*clientHelloMsg, map[CurveID]ecdheParameters, error) {
 	config := c.config
 	if len(config.ServerName) == 0 && !config.InsecureSkipVerify {
 		return nil, nil, errors.New("tls: either ServerName or InsecureSkipVerify must be specified in the tls.Config")
@@ -127,7 +127,7 @@ func (c *Conn) makeClientHello() (*clientHelloMsg, ecdheParameters, error) {
 		hello.supportedSignatureAlgorithms = testingOnlyForceClientHelloSignatureAlgorithms
 	}
 
-	var params ecdheParameters
+	var params map[CurveID]ecdheParameters
 	if hello.supportedVersions[0] == VersionTLS13 {
 		if hasAESGCMHardwareSupport {
 			hello.cipherSuites = append(hello.cipherSuites, defaultCipherSuitesTLS13...)
@@ -139,14 +139,39 @@ func (c *Conn) makeClientHello() (*clientHelloMsg, ecdheParameters, error) {
 		if _, ok := curveForCurveID(curveID); curveID != X25519 && !ok {
 			return nil, nil, errors.New("tls: CurvePreferences includes unsupported curve")
 		}
-		params, err = generateECDHEParameters(config.rand(), curveID)
+
+		var err error
+		hello.keyShares, params, err = handleCurves(config.rand(), config.curvePreferences())
 		if err != nil {
 			return nil, nil, err
 		}
-		hello.keyShares = []keyShare{{group: curveID, data: params.PublicKey()}}
 	}
 
 	return hello, params, nil
+}
+
+func handleCurves(rng io.Reader, curves []CurveID) ([]keyShare, map[CurveID]ecdheParameters, error) {
+	var paramsByCurve = make(map[CurveID]ecdheParameters)
+	var keyShares []keyShare
+
+	for _, curveID := range curves {
+		if _, ok := curveForCurveID(curveID); curveID != X25519 && !ok {
+			return nil, nil, errors.New("tls: CurvePreferences includes unsupported curve")
+		}
+
+		if !isGroupSupported(curveID) {
+			continue
+		}
+
+		params, err := generateECDHEParameters(rng, curveID)
+		if err != nil {
+			return nil, nil, err
+		}
+		keyShares = append(keyShares, keyShare{group: curveID, data: params.PublicKey()})
+		paramsByCurve[curveID] = params
+	}
+
+	return keyShares, paramsByCurve, nil
 }
 
 func (c *Conn) clientHandshake(ctx context.Context) (err error) {

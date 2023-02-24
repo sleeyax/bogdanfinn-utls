@@ -22,7 +22,7 @@ type clientHandshakeStateTLS13 struct {
 	ctx         context.Context
 	serverHello *serverHelloMsg
 	hello       *clientHelloMsg
-	ecdheParams ecdheParameters
+	ecdheParams map[CurveID]ecdheParameters
 
 	session     *ClientSessionState
 	earlySecret []byte
@@ -227,11 +227,11 @@ func (hs *clientHandshakeStateTLS13) processHelloRetryRequest() error {
 				break
 			}
 		}
-		if !curveOK {
+		if !curveOK || !isGroupSupported(curveID) {
 			c.sendAlert(alertIllegalParameter)
 			return errors.New("tls: server selected unsupported group")
 		}
-		if hs.ecdheParams.CurveID() == curveID {
+		if _, ok := hs.ecdheParams[curveID]; !ok {
 			c.sendAlert(alertIllegalParameter)
 			return errors.New("tls: server sent an unnecessary HelloRetryRequest key_share")
 		}
@@ -244,7 +244,7 @@ func (hs *clientHandshakeStateTLS13) processHelloRetryRequest() error {
 			c.sendAlert(alertInternalError)
 			return err
 		}
-		hs.ecdheParams = params
+		hs.ecdheParams[curveID] = params
 		hs.hello.keyShares = []keyShare{{group: curveID, data: params.PublicKey()}}
 	}
 
@@ -381,7 +381,7 @@ func (hs *clientHandshakeStateTLS13) processServerHello() error {
 		c.sendAlert(alertIllegalParameter)
 		return errors.New("tls: server did not send a key share")
 	}
-	if hs.serverHello.serverShare.group != hs.ecdheParams.CurveID() {
+	if _, ok := hs.ecdheParams[hs.serverHello.serverShare.group]; !ok {
 		c.sendAlert(alertIllegalParameter)
 		return errors.New("tls: server selected unsupported group")
 	}
@@ -419,7 +419,9 @@ func (hs *clientHandshakeStateTLS13) processServerHello() error {
 func (hs *clientHandshakeStateTLS13) establishHandshakeKeys() error {
 	c := hs.c
 
-	sharedKey := hs.ecdheParams.SharedKey(hs.serverHello.serverShare.data)
+	ecdheParams := hs.ecdheParams[hs.serverHello.serverShare.group]
+	sharedKey := ecdheParams.SharedKey(hs.serverHello.serverShare.data)
+
 	if sharedKey == nil {
 		c.sendAlert(alertIllegalParameter)
 		return errors.New("tls: invalid server key share")

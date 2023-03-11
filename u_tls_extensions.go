@@ -1021,7 +1021,13 @@ func (e *UtlsPaddingExtension) Len() int {
 
 func (e *UtlsPaddingExtension) Update(clientHelloUnpaddedLen int) {
 	if e.GetPaddingLen != nil {
-		e.PaddingLen, e.WillPad = e.GetPaddingLen(clientHelloUnpaddedLen)
+		padLen, shouldPad := e.GetPaddingLen(clientHelloUnpaddedLen)
+
+		if e.WillPad == false {
+			e.WillPad = shouldPad
+		}
+
+		e.PaddingLen = padLen
 	}
 }
 

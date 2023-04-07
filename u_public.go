@@ -35,7 +35,7 @@ type PubClientHandshakeState struct {
 // TLS 1.3 only
 type TLS13OnlyState struct {
 	Suite                *PubCipherSuiteTLS13
-	EcdheParams          map[CurveID]ecdheParameters
+	EcdheParams          ecdheParameters
 	KeySharesEcdheParams KeySharesEcdheParameters
 	EarlySecret          []byte
 	BinderKey            []byte

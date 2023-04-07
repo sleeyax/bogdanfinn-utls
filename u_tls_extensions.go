@@ -19,21 +19,21 @@ import (
 func ExtensionFromID(id uint16) TLSExtension {
 	// deep copy
 	switch id {
-	case extensionServerName:
+	case ExtensionServerName:
 		return &SNIExtension{}
-	case extensionStatusRequest:
+	case ExtensionStatusRequest:
 		return &StatusRequestExtension{}
-	case extensionSupportedCurves:
+	case ExtensionSupportedCurves:
 		return &SupportedCurvesExtension{}
-	case extensionSupportedPoints:
+	case ExtensionSupportedPoints:
 		return &SupportedPointsExtension{}
-	case extensionSignatureAlgorithms:
+	case ExtensionSignatureAlgorithms:
 		return &SignatureAlgorithmsExtension{}
-	case extensionALPN:
+	case ExtensionALPN:
 		return &ALPNExtension{}
-	case extensionStatusRequestV2:
+	case ExtensionStatusRequestV2:
 		return &StatusRequestV2Extension{}
-	case extensionSCT:
+	case ExtensionSCT:
 		return &SCTExtension{}
 	case utlsExtensionPadding:
 		return &UtlsPaddingExtension{}
@@ -45,23 +45,23 @@ func ExtensionFromID(id uint16) TLSExtension {
 		return &UtlsCompressCertExtension{}
 	case fakeExtensionDelegatedCredentials:
 		return &FakeDelegatedCredentialsExtension{}
-	case extensionSessionTicket:
+	case ExtensionSessionTicket:
 		return &SessionTicketExtension{}
 	case fakeExtensionPreSharedKey:
 		return &FakePreSharedKeyExtension{}
 	// case extensionEarlyData:
 	// 	return &EarlyDataExtension{}
-	case extensionSupportedVersions:
+	case ExtensionSupportedVersions:
 		return &SupportedVersionsExtension{}
 	// case extensionCookie:
 	// 	return &CookieExtension{}
-	case extensionPSKModes:
+	case ExtensionPSKModes:
 		return &PSKKeyExchangeModesExtension{}
 	// case extensionCertificateAuthorities:
 	// 	return &CertificateAuthoritiesExtension{}
-	case extensionSignatureAlgorithmsCert:
+	case ExtensionSignatureAlgorithmsCert:
 		return &SignatureAlgorithmsCertExtension{}
-	case extensionKeyShare:
+	case ExtensionKeyShare:
 		return &KeyShareExtension{}
 	case extensionNextProtoNeg:
 		return &NPNExtension{}
@@ -73,7 +73,7 @@ func ExtensionFromID(id uint16) TLSExtension {
 		return &FakeChannelIDExtension{}
 	case fakeRecordSizeLimit:
 		return &FakeRecordSizeLimitExtension{}
-	case extensionRenegotiationInfo:
+	case ExtensionRenegotiationInfo:
 		return &RenegotiationInfoExtension{}
 	default:
 		if isGREASEUint16(id) {
@@ -108,14 +108,6 @@ type TLSExtensionJSON interface {
 
 	// UnmarshalJSON unmarshals the JSON-encoded data into the extension.
 	UnmarshalJSON([]byte) error
-func (e *NPNExtension) Read(b []byte) (int, error) {
-	if len(b) < e.Len() {
-		return 0, io.ErrShortBuffer
-	}
-	b[0] = byte(ExtensionNextProtoNeg >> 8)
-	b[1] = byte(ExtensionNextProtoNeg & 0xff)
-	// The length is always 0
-	return e.Len(), io.EOF
 }
 
 // SNIExtension implements server_name (0)
@@ -254,28 +246,6 @@ func (e *StatusRequestExtension) Write(b []byte) (int, error) {
 func (e *StatusRequestExtension) writeToUConn(uc *UConn) error {
 	uc.HandshakeState.Hello.OcspStapling = true
 	return nil
-}
-
-func (e *StatusRequestV2Extension) Len() int {
-	return 13
-}
-
-func (e *StatusRequestV2Extension) Read(b []byte) (int, error) {
-	if len(b) < e.Len() {
-		return 0, io.ErrShortBuffer
-	}
-	// RFC 4366, section 3.6
-	b[0] = byte(ExtensionStatusRequestV2 >> 8)
-	b[1] = byte(ExtensionStatusRequestV2)
-	b[2] = 0
-	b[3] = 9
-	b[4] = 0
-	b[5] = 7
-	b[6] = 2 // OCSP type
-	b[7] = 0
-	b[8] = 4
-	// Two zero valued uint16s for the two lengths.
-	return e.Len(), io.EOF
 }
 
 // SupportedCurvesExtension implements supported_groups (renamed from "elliptic_curves") (10)
@@ -509,8 +479,8 @@ func (e *StatusRequestV2Extension) Read(b []byte) (int, error) {
 		return 0, io.ErrShortBuffer
 	}
 	// RFC 4366, section 3.6
-	b[0] = byte(extensionStatusRequestV2 >> 8)
-	b[1] = byte(extensionStatusRequestV2)
+	b[0] = byte(ExtensionStatusRequestV2 >> 8)
+	b[1] = byte(ExtensionStatusRequestV2)
 	b[2] = 0
 	b[3] = 9
 	b[4] = 0
@@ -626,18 +596,6 @@ func (e *SignatureAlgorithmsCertExtension) Write(b []byte) (int, error) {
 func (e *SignatureAlgorithmsCertExtension) writeToUConn(uc *UConn) error {
 	uc.HandshakeState.Hello.SupportedSignatureAlgorithms = e.SupportedSignatureAlgorithms
 	return nil
-	var extInnerBody []byte // inner body is empty
-	innerBodyLen := len(extInnerBody)
-	extBodyLen := innerBodyLen + 1
-
-	b[0] = byte(ExtensionRenegotiationInfo >> 8)
-	b[1] = byte(ExtensionRenegotiationInfo & 0xff)
-	b[2] = byte(extBodyLen >> 8)
-	b[3] = byte(extBodyLen)
-	b[4] = byte(innerBodyLen)
-	copy(b[5:], extInnerBody)
-
-	return e.Len(), io.EOF
 }
 
 // ALPNExtension implements application_layer_protocol_negotiation (16)
@@ -724,6 +682,8 @@ func (e *ALPNExtension) Write(b []byte) (int, error) {
 // ApplicationSettingsExtension represents the TLS ALPS extension.
 // At the time of this writing, this extension is currently a draft:
 // https://datatracker.ietf.org/doc/html/draft-vvv-tls-alps-01
+type ALPSExtension = ApplicationSettingsExtension
+
 type ApplicationSettingsExtension struct {
 	SupportedProtocols []string
 }
@@ -806,52 +766,6 @@ func (e *ApplicationSettingsExtension) Write(b []byte) (int, error) {
 }
 
 // SCTExtension implements signed_certificate_timestamp (18)
-type ALPSExtension struct {
-	SupportedProtocols []string
-}
-
-func (e *ALPSExtension) writeToUConn(uc *UConn) error {
-	return nil
-}
-
-func (e *ALPSExtension) Len() int {
-	bLen := 2 + 2 + 2 // Type + Length + ALPS Extension length
-	for _, s := range e.SupportedProtocols {
-		bLen += 1 + len(s) // Supported ALPN Length + actual length of protocol
-	}
-	return bLen
-}
-
-func (e *ALPSExtension) Read(b []byte) (int, error) {
-	if len(b) < e.Len() {
-		return 0, io.ErrShortBuffer
-	}
-
-	// Read Type.
-	b[0] = byte(ExtensionALPS >> 8)   // hex: 44 dec: 68
-	b[1] = byte(ExtensionALPS & 0xff) // hex: 69 dec: 105
-
-	lengths := b[2:] // get the remaining buffer without Type
-	b = b[6:]        // set the buffer to the buffer without Type, Length and ALPS Extension Length (so only the Supported ALPN list remains)
-
-	stringsLength := 0
-	for _, s := range e.SupportedProtocols {
-		l := len(s)            // Supported ALPN Length
-		b[0] = byte(l)         // Supported ALPN Length in bytes hex: 02 dec: 2
-		copy(b[1:], s)         // copy the Supported ALPN as bytes to the buffer
-		b = b[1+l:]            // set the buffer to the buffer without the Supported ALPN Length and Supported ALPN (so we can continue to the next protocol in this loop)
-		stringsLength += 1 + l // Supported ALPN Length (the field itself) + Supported ALPN Length (the value)
-	}
-
-	lengths[2] = byte(stringsLength >> 8) // ALPS Extension Length hex: 00 dec: 0
-	lengths[3] = byte(stringsLength)      // ALPS Extension Length hex: 03 dec: 3
-	stringsLength += 2                    // plus ALPS Extension Length field length
-	lengths[0] = byte(stringsLength >> 8) // Length hex:00 dec: 0
-	lengths[1] = byte(stringsLength)      // Length hex: 05 dec: 5
-
-	return e.Len(), io.EOF
-}
-
 type SCTExtension struct {
 }
 
@@ -1700,8 +1614,8 @@ func (e *RenegotiationInfoExtension) Read(b []byte) (int, error) {
 	// dataLen := len(e.RenegotiatedConnection)
 	extBodyLen := 1 // + len(dataLen)
 
-	b[0] = byte(extensionRenegotiationInfo >> 8)
-	b[1] = byte(extensionRenegotiationInfo & 0xff)
+	b[0] = byte(ExtensionRenegotiationInfo >> 8)
+	b[1] = byte(ExtensionRenegotiationInfo & 0xff)
 	b[2] = byte(extBodyLen >> 8)
 	b[3] = byte(extBodyLen)
 	// b[4] = byte(dataLen)
@@ -1831,28 +1745,6 @@ func (e *FakeRecordSizeLimitExtension) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (e *DelegatedCredentialsExtension) Len() int {
-	return 6 + 2*len(e.AlgorithmsSignature)
-}
-
-func (e *DelegatedCredentialsExtension) Read(b []byte) (int, error) {
-	if len(b) < e.Len() {
-		return 0, io.ErrShortBuffer
-	}
-	b[0] = byte(ExtensionDelegatedCredentials >> 8)
-	b[1] = byte(ExtensionDelegatedCredentials)
-	b[2] = byte((2 + 2*len(e.AlgorithmsSignature)) >> 8)
-	b[3] = byte(2 + 2*len(e.AlgorithmsSignature))
-	b[4] = byte((2 * len(e.AlgorithmsSignature)) >> 8)
-	b[5] = byte(2 * len(e.AlgorithmsSignature))
-	for i, sigAndHash := range e.AlgorithmsSignature {
-		b[6+2*i] = byte(sigAndHash >> 8)
-		b[7+2*i] = byte(sigAndHash)
-	}
-	return e.Len(), io.EOF
-}
-type DelegatedCredentialsExtension = FakeDelegatedCredentialsExtension
-
 // https://tools.ietf.org/html/rfc8472#section-2
 type FakeTokenBindingExtension struct {
 	MajorVersion, MinorVersion uint8
@@ -1928,8 +1820,7 @@ func (e *FakeTokenBindingExtension) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// https://datatracker.ietf.org/doc/html/draft-ietf-tls-subcerts-15#section-4.1.1
-
+type DelegatedCredentialsExtension = FakeDelegatedCredentialsExtension
 type FakeDelegatedCredentialsExtension struct {
 	SupportedSignatureAlgorithms []SignatureScheme
 }
@@ -1947,8 +1838,8 @@ func (e *FakeDelegatedCredentialsExtension) Read(b []byte) (int, error) {
 		return 0, io.ErrShortBuffer
 	}
 	// https://datatracker.ietf.org/doc/html/draft-ietf-tls-subcerts-15#section-4.1.1
-	b[0] = byte(fakeExtensionDelegatedCredentials >> 8)
-	b[1] = byte(fakeExtensionDelegatedCredentials)
+	b[0] = byte(ExtensionDelegatedCredentials >> 8)
+	b[1] = byte(ExtensionDelegatedCredentials)
 	b[2] = byte((2 + 2*len(e.SupportedSignatureAlgorithms)) >> 8)
 	b[3] = byte((2 + 2*len(e.SupportedSignatureAlgorithms)))
 	b[4] = byte((2 * len(e.SupportedSignatureAlgorithms)) >> 8)
@@ -2045,8 +1936,8 @@ func (e *FakePreSharedKeyExtension) Read(b []byte) (int, error) {
 		return 0, io.ErrShortBuffer
 	}
 
-	b[0] = byte(extensionPreSharedKey >> 8)
-	b[1] = byte(extensionPreSharedKey)
+	b[0] = byte(ExtensionPreSharedKey >> 8)
+	b[1] = byte(ExtensionPreSharedKey)
 	b[2] = byte((e.Len() - 4) >> 8)
 	b[3] = byte(e.Len() - 4)
 

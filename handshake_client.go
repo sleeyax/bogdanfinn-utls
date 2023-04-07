@@ -38,7 +38,7 @@ type clientHandshakeState struct {
 
 var testingOnlyForceClientHelloSignatureAlgorithms []SignatureScheme
 
-func (c *Conn) makeClientHello() (*clientHelloMsg, map[CurveID]ecdheParameters, error) {
+func (c *Conn) makeClientHello() (*clientHelloMsg, ecdheParameters, error) {
 	config := c.config
 
 	// [UTLS SECTION START]
@@ -130,7 +130,7 @@ func (c *Conn) makeClientHello() (*clientHelloMsg, map[CurveID]ecdheParameters, 
 		hello.supportedSignatureAlgorithms = testingOnlyForceClientHelloSignatureAlgorithms
 	}
 
-	var params map[CurveID]ecdheParameters
+	var params ecdheParameters
 	if hello.supportedVersions[0] == VersionTLS13 {
 		if hasAESGCMHardwareSupport {
 			hello.cipherSuites = append(hello.cipherSuites, defaultCipherSuitesTLS13...)
@@ -143,11 +143,11 @@ func (c *Conn) makeClientHello() (*clientHelloMsg, map[CurveID]ecdheParameters, 
 			return nil, nil, errors.New("tls: CurvePreferences includes unsupported curve")
 		}
 
-		var err error
-		hello.keyShares, params, err = handleCurves(config.rand(), config.curvePreferences())
+		params, err := generateECDHEParameters(config.rand(), curveID)
 		if err != nil {
 			return nil, nil, err
 		}
+		hello.keyShares = []keyShare{{group: curveID, data: params.PublicKey()}}
 	}
 
 	return hello, params, nil

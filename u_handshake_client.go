@@ -199,14 +199,14 @@ func (c *Conn) makeClientHelloForApplyPreset() (*clientHelloMsg, clientKeyShareP
 
 	hello := &clientHelloMsg{
 		vers:                         clientHelloVersion,
-		compressionMethods:           []uint8{compressionNone},
+		compressionMethods:           []uint8{CompressionNone},
 		random:                       make([]byte, 32),
 		extendedMasterSecret:         true,
 		ocspStapling:                 true,
 		scts:                         true,
 		serverName:                   hostnameInSNI(config.ServerName),
 		supportedCurves:              config.curvePreferences(),
-		supportedPoints:              []uint8{pointFormatUncompressed},
+		supportedPoints:              []uint8{PointFormatUncompressed},
 		secureRenegotiationSupported: true,
 		alpnProtocols:                config.NextProtos,
 		supportedVersions:            supportedVersions,

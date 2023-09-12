@@ -19,25 +19,25 @@ import (
 func ExtensionFromID(id uint16) TLSExtension {
 	// deep copy
 	switch id {
-	case extensionServerName:
+	case ExtensionServerName:
 		return &SNIExtension{}
-	case extensionStatusRequest:
+	case ExtensionStatusRequest:
 		return &StatusRequestExtension{}
-	case extensionSupportedCurves:
+	case ExtensionSupportedCurves:
 		return &SupportedCurvesExtension{}
-	case extensionSupportedPoints:
+	case ExtensionSupportedPoints:
 		return &SupportedPointsExtension{}
-	case extensionSignatureAlgorithms:
+	case ExtensionSignatureAlgorithms:
 		return &SignatureAlgorithmsExtension{}
-	case extensionALPN:
+	case ExtensionALPN:
 		return &ALPNExtension{}
-	case extensionStatusRequestV2:
+	case ExtensionStatusRequestV2:
 		return &StatusRequestV2Extension{}
-	case extensionSCT:
+	case ExtensionSCT:
 		return &SCTExtension{}
 	case utlsExtensionPadding:
 		return &UtlsPaddingExtension{}
-	case extensionExtendedMasterSecret:
+	case ExtensionExtendedMasterSecret:
 		return &ExtendedMasterSecretExtension{}
 	case fakeExtensionTokenBinding:
 		return &FakeTokenBindingExtension{}
@@ -45,27 +45,27 @@ func ExtensionFromID(id uint16) TLSExtension {
 		return &UtlsCompressCertExtension{}
 	case fakeExtensionDelegatedCredentials:
 		return &FakeDelegatedCredentialsExtension{}
-	case extensionSessionTicket:
+	case ExtensionSessionTicket:
 		return &SessionTicketExtension{}
-	case extensionPreSharedKey:
+	case ExtensionPreSharedKey:
 		return (PreSharedKeyExtension)(&FakePreSharedKeyExtension{}) // To use the result, caller needs further inspection to decide between Fake or Utls.
-	// case extensionEarlyData:
+	// case ExtensionEarlyData:
 	// 	return &EarlyDataExtension{}
-	case extensionSupportedVersions:
+	case ExtensionSupportedVersions:
 		return &SupportedVersionsExtension{}
-	// case extensionCookie:
+	// case ExtensionCookie:
 	// 	return &CookieExtension{}
-	case extensionPSKModes:
+	case ExtensionPSKModes:
 		return &PSKKeyExchangeModesExtension{}
-	// case extensionCertificateAuthorities:
+	// case ExtensionCertificateAuthorities:
 	// 	return &CertificateAuthoritiesExtension{}
-	case extensionSignatureAlgorithmsCert:
+	case ExtensionSignatureAlgorithmsCert:
 		return &SignatureAlgorithmsCertExtension{}
-	case extensionKeyShare:
+	case ExtensionKeyShare:
 		return &KeyShareExtension{}
-	case extensionQUICTransportParameters:
+	case ExtensionQUICTransportParameters:
 		return &QUICTransportParametersExtension{}
-	case extensionNextProtoNeg:
+	case ExtensionNextProtoNeg:
 		return &NPNExtension{}
 	case utlsExtensionApplicationSettings:
 		return &ApplicationSettingsExtension{}
@@ -75,7 +75,7 @@ func ExtensionFromID(id uint16) TLSExtension {
 		return &FakeChannelIDExtension{}
 	case fakeRecordSizeLimit:
 		return &FakeRecordSizeLimitExtension{}
-	case extensionRenegotiationInfo:
+	case ExtensionRenegotiationInfo:
 		return &RenegotiationInfoExtension{}
 	default:
 		if isGREASEUint16(id) {
@@ -494,8 +494,8 @@ func (e *StatusRequestV2Extension) Read(b []byte) (int, error) {
 		return 0, io.ErrShortBuffer
 	}
 	// RFC 4366, section 3.6
-	b[0] = byte(extensionStatusRequestV2 >> 8)
-	b[1] = byte(extensionStatusRequestV2)
+	b[0] = byte(ExtensionStatusRequestV2 >> 8)
+	b[1] = byte(ExtensionStatusRequestV2)
 	b[2] = 0
 	b[3] = 9
 	b[4] = 0
@@ -880,8 +880,8 @@ func (e *ExtendedMasterSecretExtension) Read(b []byte) (int, error) {
 		return 0, io.ErrShortBuffer
 	}
 	// https://tools.ietf.org/html/rfc7627
-	b[0] = byte(extensionExtendedMasterSecret >> 8)
-	b[1] = byte(extensionExtendedMasterSecret)
+	b[0] = byte(ExtensionExtendedMasterSecret >> 8)
+	b[1] = byte(ExtensionExtendedMasterSecret)
 	// The length is 0
 	return e.Len(), io.EOF
 }
@@ -1296,8 +1296,8 @@ func (e *QUICTransportParametersExtension) Read(b []byte) (int, error) {
 		return 0, io.ErrShortBuffer
 	}
 
-	b[0] = byte(extensionQUICTransportParameters >> 8)
-	b[1] = byte(extensionQUICTransportParameters)
+	b[0] = byte(ExtensionQUICTransportParameters >> 8)
+	b[1] = byte(ExtensionQUICTransportParameters)
 	// e.Len() is called before so that e.marshalResult is set
 	b[2] = byte((len(e.marshalResult)) >> 8)
 	b[3] = byte(len(e.marshalResult))
@@ -1526,16 +1526,6 @@ func (e *NPNExtension) Len() int {
 	return 4
 }
 
-func (e *NPNExtension) Read(b []byte) (int, error) {
-	if len(b) < e.Len() {
-		return 0, io.ErrShortBuffer
-	}
-	b[0] = byte(extensionNextProtoNeg >> 8)
-	b[1] = byte(extensionNextProtoNeg & 0xff)
-	// The length is always 0
-	return e.Len(), io.EOF
-}
-
 // Write is a no-op for NPNExtension. NextProtos are not included in the
 // ClientHello.
 func (e *NPNExtension) Write(_ []byte) (int, error) {
@@ -1576,8 +1566,8 @@ func (e *RenegotiationInfoExtension) Read(b []byte) (int, error) {
 	// dataLen := len(e.RenegotiatedConnection)
 	extBodyLen := 1 // + len(dataLen)
 
-	b[0] = byte(extensionRenegotiationInfo >> 8)
-	b[1] = byte(extensionRenegotiationInfo & 0xff)
+	b[0] = byte(ExtensionRenegotiationInfo >> 8)
+	b[1] = byte(ExtensionRenegotiationInfo & 0xff)
 	b[2] = byte(extBodyLen >> 8)
 	b[3] = byte(extBodyLen)
 	// b[4] = byte(dataLen)

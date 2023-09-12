@@ -19,10 +19,8 @@ import (
 	"hash"
 	"runtime"
 
-	"golang.org/x/sys/cpu"
-
-	"github.com/bogdanfinn/utls/cpu"
 	"golang.org/x/crypto/chacha20poly1305"
+	"golang.org/x/sys/cpu"
 )
 
 // CipherSuite is a TLS cipher suite. Note that most functions in this package

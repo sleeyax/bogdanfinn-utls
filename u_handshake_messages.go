@@ -91,7 +91,7 @@ func (m *utlsClientEncryptedExtensionsMsg) marshal() (x []byte, err error) {
 				})
 			}
 			if len(m.customExtension) > 0 {
-				extensions.AddUint16(fakeExtensionCustom)
+				extensions.AddUint16(utlsFakeExtensionCustom)
 				extensions.AddUint16LengthPrefixed(func(msg *cryptobyte.Builder) {
 					msg.AddBytes(m.customExtension)
 				})
